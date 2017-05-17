@@ -37,10 +37,10 @@ $EM_CONF[$_EXTKEY] = [
     'constraints' => [
         'depends' => [
             'php' => '5.5.0-7.0.99',
-            'typo3' => '6.2.0-7.9.99',
+            'typo3' => '6.2.0-8.7.99',
             'static_info_tables' => '6.2.0-',
             'oelib' => '1.0.0-1.9.99',
-            'mkforms' => '2.0.0-2.99.99',
+            'mkforms' => '2.0.0-3.99.99',
         ],
         'conflicts' => [
             'dbal' => '',
