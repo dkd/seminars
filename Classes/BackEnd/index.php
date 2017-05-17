@@ -210,6 +210,16 @@ class Tx_Seminars_Module2 extends Tx_Seminars_BackEnd_Module
     }
 
     /**
+     * Returns the content.
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
      * Adds a flash message to the queue.
      *
      * @param FlashMessage $flashMessage
