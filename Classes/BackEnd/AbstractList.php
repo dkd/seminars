@@ -144,7 +144,8 @@ abstract class Tx_Seminars_BackEnd_AbstractList
             ) . ')) {return true;} else {return false;}');
             $langDelete = $LANG->getLL('delete', 1);
             $result = '<a class="btn btn-default" href="' .
-                htmlspecialchars($this->page->doc->issueCommand($params)) .
+                //htmlspecialchars($this->page->doc->issueCommand($params)) .
+                htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::getLinkToDataHandlerAction($params)) .
                 '" onclick="' . $confirmation . '">' .
                 '<img src="/' . ExtensionManagementUtility::siteRelPath('seminars') . 'Resources/Public/Icons/Garbage.gif' .
                 '" title="' . $langDelete . '" alt="' . $langDelete . '" class="deleteicon" />' .
@@ -314,7 +315,8 @@ abstract class Tx_Seminars_BackEnd_AbstractList
             }
 
             $result = '<a class="btn btn-default" href="' .
-                htmlspecialchars($this->page->doc->issueCommand($params)) . '">' .
+                //htmlspecialchars($this->page->doc->issueCommand($params)) . '">' .
+                htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::getLinkToDataHandlerAction($params)) . '">' .
                 '<img src="/' . ExtensionManagementUtility::siteRelPath('seminars') . 'Resources/Public/Icons/' . $icon .
                 '" title="' . $langHide . '" alt="' . $langHide . '" class="hideicon" />' .
                 '</a>';

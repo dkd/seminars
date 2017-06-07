@@ -48,6 +48,38 @@ class Tx_Seminars_Module2 extends Tx_Seminars_BackEnd_Module
     protected $subModule = 0;
 
     /**
+     * Main module action
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function mainAction(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response)
+    {
+        // This checks permissions and exits if the users has no permission for entry.
+        $GLOBALS['BE_USER']->modAccess($GLOBALS['MCONF'], true);
+
+        if (GeneralUtility::_GET('csv') !== '1') {
+            //$GLOBALS['LANG']->includeLLFile('EXT:lang/locallang_common.xlf');
+            //$GLOBALS['LANG']->includeLLFile('EXT:lang/locallang_show_rechis.xlf');
+            //$GLOBALS['LANG']->includeLLFile('EXT:lang/locallang_mod_web_list.xlf');
+            $GLOBALS['LANG']->includeLLFile('EXT:seminars/Resources/Private/Language/BackEnd/locallang.xlf');
+            $GLOBALS['LANG']->includeLLFile('EXT:seminars/Resources/Private/Language/Csv/locallang.xlf');
+
+            $GLOBALS['SOBE'] = $this;
+            $this->init();
+            $content = $this->main();
+        } else {
+            /** @var Tx_Seminars_Csv_CsvDownloader $csvExporter */
+            $csvExporter = GeneralUtility::makeInstance(Tx_Seminars_Csv_CsvDownloader::class);
+            $content = $csvExporter->main();
+        }
+
+        $response->getBody()->write($content);
+        return $response;
+    }
+
+    /**
      * Initializes some variables and also starts the initialization of the parent class.
      *
      * @return void
@@ -74,14 +106,15 @@ class Tx_Seminars_Module2 extends Tx_Seminars_BackEnd_Module
         $this->doc->backPath = $BACK_PATH;
         $this->doc->docType = 'xhtml_strict';
 
-        $this->doc->getPageRenderer()->addCssFile(
+        $pageRenderer = $this->getPageRenderer();
+        $pageRenderer->addCssFile(
             '../typo3conf/ext/seminars/Resources/Public/CSS/BackEnd/BackEnd.css',
             'stylesheet',
             'all',
             '',
             false
         );
-        $this->doc->getPageRenderer()->addCssFile(
+        $pageRenderer->addCssFile(
             '../typo3conf/ext/seminars/Resources/Public/CSS/BackEnd/Print.css',
             'stylesheet',
             'print',
@@ -92,7 +125,7 @@ class Tx_Seminars_Module2 extends Tx_Seminars_BackEnd_Module
         // draw the header
         $this->content = $this->doc->startPage($LANG->getLL('title'));
         $this->content .= $this->doc->header($LANG->getLL('title'));
-        $this->content .= $this->doc->spacer(5);
+        //$this->content .= $this->doc->spacer(5);
 
         if ($this->id <= 0) {
             /** @var FlashMessage $message */
@@ -170,7 +203,7 @@ class Tx_Seminars_Module2 extends Tx_Seminars_BackEnd_Module
                 ['M' => self::MODULE_NAME, 'moduleToken' => $moduleToken, 'id' => $this->id],
                 'subModule', $this->subModule, $this->availableSubModules
             );
-            $this->content .= $this->doc->spacer(5);
+            //$this->content .= $this->doc->spacer(5);
         }
 
         // Select which sub module to display.
@@ -207,6 +240,23 @@ class Tx_Seminars_Module2 extends Tx_Seminars_BackEnd_Module
         }
 
         echo $this->content . $this->doc->endPage();
+    }
+
+    /**
+    * Returns current PageRenderer.
+    *
+    * @return \TYPO3\CMS\Core\Page\PageRenderer
+    */
+    protected function getPageRenderer()
+    {
+        if (version_compare(TYPO3_version, '7.4.0', '>=')) {
+            $pageRenderer = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Page\\PageRenderer');
+        } else {
+            /** @var \TYPO3\CMS\Backend\Template\DocumentTemplate $documentTemplate */
+            $documentTemplate = $GLOBALS['TBE_TEMPLATE'];
+            $pageRenderer = $documentTemplate->getPageRenderer();
+        }
+        return $pageRenderer;
     }
 
     /**
@@ -353,25 +403,4 @@ class Tx_Seminars_Module2 extends Tx_Seminars_BackEnd_Module
     {
         return Tx_Oelib_ConfigurationRegistry::get('plugin.tx_seminars')->getAsBoolean('isStaticTemplateLoaded');
     }
-}
-
-// This checks permissions and exits if the users has no permission for entry.
-$GLOBALS['BE_USER']->modAccess($GLOBALS['MCONF'], true);
-
-if (GeneralUtility::_GET('csv') !== '1') {
-    $GLOBALS['LANG']->includeLLFile('EXT:lang/locallang_common.xlf');
-    $GLOBALS['LANG']->includeLLFile('EXT:lang/locallang_show_rechis.xlf');
-    $GLOBALS['LANG']->includeLLFile('EXT:lang/locallang_mod_web_list.xlf');
-    $GLOBALS['LANG']->includeLLFile('EXT:seminars/Resources/Private/Language/BackEnd/locallang.xlf');
-    $GLOBALS['LANG']->includeLLFile('EXT:seminars/Resources/Private/Language/Csv/locallang.xlf');
-
-    /** @var Tx_Seminars_Module2 $SOBE */
-    $SOBE = GeneralUtility::makeInstance(Tx_Seminars_Module2::class);
-    $SOBE->init();
-
-    $SOBE->main();
-} else {
-    /** @var Tx_Seminars_Csv_CsvDownloader $csvExporter */
-    $csvExporter = GeneralUtility::makeInstance(Tx_Seminars_Csv_CsvDownloader::class);
-    echo $csvExporter->main();
 }

@@ -11,11 +11,22 @@ TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr(
     'EXT:seminars/Resources/Private/Language/locallang_csh_fe_groups.xlf'
 );
 
-$extPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY);
-
 if (TYPO3_MODE === 'BE') {
-    //\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModulePath('web_txseminarsM2', $extPath . 'Classes/BackEnd/');
-    //\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule('web', 'txseminarsM2', '', $extPath . 'Classes/BackEnd/');
+    TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule(
+        'web',
+        'txseminarsM2',
+        '',
+        '',
+        [
+            'routeTarget'           => \Tx_Seminars_Module2::class . '::mainAction',
+            'access'                => 'user,group',
+            'name'                  => 'web_txseminarsM2',
+            'script'                => '_DISPATCH',
+            'icon'                  => 'EXT:seminars/ext_icon.gif',
+            'navigationComponentId' => 'typo3-pagetree',
+            'labels'                => 'LLL:EXT:seminars/Resources/Private/Language/BackEnd/locallang_mod.xml',
+        ]
+    );
 }
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
