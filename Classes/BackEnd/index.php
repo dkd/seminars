@@ -68,7 +68,7 @@ class Tx_Seminars_Module2 extends Tx_Seminars_BackEnd_Module
 
             $GLOBALS['SOBE'] = $this;
             $this->init();
-            $content = $this->main();
+            $this->main();
         } else {
             /** @var Tx_Seminars_Csv_CsvDownloader $csvExporter */
             $csvExporter = GeneralUtility::makeInstance(Tx_Seminars_Csv_CsvDownloader::class);
@@ -101,6 +101,10 @@ class Tx_Seminars_Module2 extends Tx_Seminars_BackEnd_Module
     public function main()
     {
         global $LANG, $BACK_PATH, $BE_USER;
+
+        if($LANG === null) {
+            $LANG = $GLOBALS['LANG'];
+        }
 
         $this->doc = GeneralUtility::makeInstance(DocumentTemplate::class);
         $this->doc->backPath = $BACK_PATH;
@@ -198,11 +202,27 @@ class Tx_Seminars_Module2 extends Tx_Seminars_BackEnd_Module
         // Only generate the tab menu if the current back-end user has the
         // rights to show any of the tabs.
         if ($this->subModule) {
+            /*
             $moduleToken = FormProtectionFactory::get()->generateToken('moduleCall', self::MODULE_NAME);
             $this->content .= $this->doc->getTabMenu(
                 ['M' => self::MODULE_NAME, 'moduleToken' => $moduleToken, 'id' => $this->id],
                 'subModule', $this->subModule, $this->availableSubModules
             );
+            */
+            $tempTab = [];
+            foreach($this->availableSubModules as $key=>$value) {
+                $url = BackendUtility::getModuleUrl(
+                    self::MODULE_NAME, ['id' => $this->id, 'subModule' => $key]
+                );
+                if((int)$this->subModule === (int)$key) {
+                    $tempTab[] = '<li class="active"><a href="'.$url.'">'.$value.'</a></li>';
+                } else {
+                    $tempTab[] = '<li><a href="'.$url.'">'.$value.'</a></li>';
+                }
+            }
+            if(count($tempTab) > 0) {
+                $this->content .= '<ul class="nav nav-tabs" role="tablist">' . implode($tempTab) . '</ul>';
+            }
             //$this->content .= $this->doc->spacer(5);
         }
 
@@ -266,7 +286,8 @@ class Tx_Seminars_Module2 extends Tx_Seminars_BackEnd_Module
      */
     public function getContent()
     {
-        return $this->content;
+        //return $this->content;
+        return '';
     }
 
     /**

@@ -223,14 +223,14 @@ class Tx_Seminars_BackEnd_EventsList extends Tx_Seminars_BackEnd_AbstractList
                 'has_enough_attendees',
                 ($event->needsRegistration()
                     ? (!$event->hasEnoughAttendances()
-                        ? $GLOBALS['LANG']->getLL('no') : $GLOBALS['LANG']->getLL('yes'))
+                        ? $GLOBALS['LANG']->getLL('label_no') : $GLOBALS['LANG']->getLL('label_yes'))
                     : '')
             );
             $this->template->setMarker(
                 'is_fully_booked',
                 ($event->needsRegistration()
                     ? (!$event->isFull()
-                        ? $GLOBALS['LANG']->getLL('no') : $GLOBALS['LANG']->getLL('yes'))
+                        ? $GLOBALS['LANG']->getLL('label_no') : $GLOBALS['LANG']->getLL('label_yes'))
                     : '')
             );
             $this->template->setMarker(

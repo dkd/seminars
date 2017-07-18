@@ -40,9 +40,10 @@ class ConfigurationController
 
         /** @var \Tx_Seminars_Module2 $SOBE */
         $SOBE = GeneralUtility::makeInstance('Tx_Seminars_Module2');
-        $SOBE->init();
-        $SOBE->main();
-        $response->getBody()->write($SOBE->getContent());
+        //$SOBE->init();
+        //$SOBE->main();
+        //$response->getBody()->write($SOBE->getContent());
+        $response = $SOBE->mainAction($request,$response);
 
         return $response;
     }

@@ -1,15 +1,33 @@
+#seminars-configuration- {
+	margin-left: 10px;
+	margin-top: 5px;
+	max-width: 100%;
+}
+
 table.typo3-dblist {
 	padding: 0;
 	margin: 0;
 	border-spacing: 0;
 }
 
-td {
+.t3-col-header, .t3-row-header {
+	padding: 3px 10px;
+}
+.t3-row-header {
+	background-color: #666;
+	color: #fff;
+}
+table.typo3-dblist tr td {
+	padding: 6px;
+	min-height: 16px;
+}
+th, td {
+	text-align: left;
+	vertical-align: top;
 	white-space: nowrap;
 }
 
 td.datecol,
-td.attendees,
 td.queue,
 td.attendees_min,
 td.attendees_max,
