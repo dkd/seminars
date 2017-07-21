@@ -49,4 +49,16 @@ class Tx_Seminars_Csv_DownloadRegistrationListView extends Tx_Seminars_Csv_Abstr
     {
         return $this->configuration->getAsBoolean('showAttendancesOnRegistrationQueueInCSV');
     }
+
+    /**
+     * Includes additional language files for $this->translator.
+     *
+     * @return void
+     */
+    protected function includeAdditionalLanguageFiles()
+    {
+        if($this->configuration->getAsString('additionalLLFileForCsv') !== '') {
+            $this->translator->includeLLFile($this->configuration->getAsString('additionalLLFileForCsv'));
+        }
+    }
 }
